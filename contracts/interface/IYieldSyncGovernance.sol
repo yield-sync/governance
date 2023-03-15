@@ -13,20 +13,20 @@ interface IYieldSyncGovernance
 	* @dev [view-mapping]
 	* @return {bytes32}
 	*/
-	function role_roleHash(string memory role)
+	function roleString_roleHash(string memory role)
 		external
 		view
 		returns (bytes32)
 	;
 
 	/**
-	* @notice Add to role_roleHash
+	* @notice Add to roleString_roleHash
 	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [add] `role_roleHash`
+	* @dev [add] `roleString_roleHash`
 	*      [update] AccessControlEnumerable → Add `_role`
 	* @param role {string}
 	*/
-	function addRole_roleHash(string memory role)
+	function addRoleString_roleHash(string memory role)
 		external
 	;
 }
