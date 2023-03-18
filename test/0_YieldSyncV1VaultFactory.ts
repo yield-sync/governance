@@ -26,51 +26,46 @@ describe("[0] YieldSyncGovernance.sol - YieldSync Governance", async () => {
 
 	describe("Initial values", async () => {
 		it(
-			"Should set DEFAULT_ADMIN_ROLE roleHash to 0x0000000000000000000000000000000000000000000000000000000000000000 ..",
-			async () => {
-				expect(await yieldSyncGovernance.roleString_roleHash("DEFAULT_ADMIN_ROLE")).to.equal(
-					"0x0000000000000000000000000000000000000000000000000000000000000000"
-				);
-			}
-		);
-
-		it(
 			"Should set msg.sender as an admin",
 			async () => {
 				const [owner] = await ethers.getSigners();
 
-				expect(
-					await yieldSyncGovernance.hasRole(
-						"0x0000000000000000000000000000000000000000000000000000000000000000",
-						owner.address
-					)
-				).to.be.true;
+				expect(await yieldSyncGovernance.hasRole(ethers.constants.HashZero, owner.address)).to.be.true;
 			}
 		);
 	});
 
 
 	describe("Restriction: IYieldSyncGovernance DEFAULT_ADMIN_ROLE", async () => {
-		describe("addRoleString_roleHash()", async () => {
+		describe("grantRole()", async () => {
 			it(
 				"Should revert when unauthorized msg.sender calls..",
 				async () => {
 					const [, addr1] = await ethers.getSigners();
 
 					await expect(
-						yieldSyncGovernance.connect(addr1).addRoleString_roleHash("JARL_OF_WHITERUN")
+						yieldSyncGovernance.connect(addr1).grantRole(
+							ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
+							addr1.address
+						)
 					).to.be.rejected;
 				}
 			);
 
 			it(
-				"Should be able to add to `roleString_roleHash`..",
+				"Should be able to add address to a newly created role..",
 				async () => {
-					await yieldSyncGovernance.addRoleString_roleHash("JARL_OF_WHITERUN")
+					const [, addr1] = await ethers.getSigners();
 
-					await expect(
-						await yieldSyncGovernance.roleString_roleHash("JARL_OF_WHITERUN")
-					).to.be.equal(ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]));
+					expect(await yieldSyncGovernance.grantRole(
+						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
+						addr1.address
+					));
+
+					expect(await yieldSyncGovernance.hasRole(
+						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
+						addr1.address
+					)).to.be.true;
 				}
 			);
 		});
