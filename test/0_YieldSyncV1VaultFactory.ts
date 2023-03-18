@@ -57,10 +57,10 @@ describe("[0] YieldSyncGovernance.sol - YieldSync Governance", async () => {
 				async () => {
 					const [, addr1] = await ethers.getSigners();
 
-					expect(await yieldSyncGovernance.grantRole(
+					await yieldSyncGovernance.grantRole(
 						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
 						addr1.address
-					));
+					);
 
 					expect(await yieldSyncGovernance.hasRole(
 						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
@@ -90,10 +90,10 @@ describe("[0] YieldSyncGovernance.sol - YieldSync Governance", async () => {
 				async () => {
 					const [, addr1] = await ethers.getSigners();
 
-					expect(await yieldSyncGovernance.revokeRole(
+					await yieldSyncGovernance.revokeRole(
 						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
 						addr1.address
-					));
+					);
 
 					expect(await yieldSyncGovernance.hasRole(
 						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
@@ -103,5 +103,29 @@ describe("[0] YieldSyncGovernance.sol - YieldSync Governance", async () => {
 			);
 		});
 
+		describe("renounceRole()", async () => {
+			it(
+				"Should revert when unauthorized msg.sender calls..",
+				async () => {
+					const [owner, addr1] = await ethers.getSigners();
+
+					await expect(
+						yieldSyncGovernance.connect(addr1).renounceRole(ethers.constants.HashZero, owner.address)
+					).to.be.rejected;
+				}
+			);
+			it(
+				"Should be able to be called by role member..",
+				async () => {
+					const [, addr1] = await ethers.getSigners();
+
+					await yieldSyncGovernance.grantRole(ethers.constants.HashZero, addr1.address)
+
+					await yieldSyncGovernance.connect(addr1).renounceRole(ethers.constants.HashZero, addr1.address);
+
+					expect(await yieldSyncGovernance.hasRole(ethers.constants.HashZero, addr1.address)).to.be.false;
+				}
+			);
+		});
 	});
 });
