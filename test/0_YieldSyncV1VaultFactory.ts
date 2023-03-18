@@ -69,5 +69,39 @@ describe("[0] YieldSyncGovernance.sol - YieldSync Governance", async () => {
 				}
 			);
 		});
+
+		describe("revokeRole()", async () => {
+			it(
+				"Should revert when unauthorized msg.sender calls..",
+				async () => {
+					const [, addr1] = await ethers.getSigners();
+
+					await expect(
+						yieldSyncGovernance.connect(addr1).revokeRole(
+							ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
+							addr1.address
+						)
+					).to.be.rejected;
+				}
+			);
+
+			it(
+				"Should be able to remove address from a role..",
+				async () => {
+					const [, addr1] = await ethers.getSigners();
+
+					expect(await yieldSyncGovernance.revokeRole(
+						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
+						addr1.address
+					));
+
+					expect(await yieldSyncGovernance.hasRole(
+						ethers.utils.solidityKeccak256(["string"], ["JARL_OF_WHITERUN"]),
+						addr1.address
+					)).to.be.false;
+				}
+			);
+		});
+
 	});
 });
