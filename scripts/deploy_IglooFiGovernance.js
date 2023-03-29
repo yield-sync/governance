@@ -5,11 +5,7 @@ async function main() {
 
 	console.log(`Deploying contracts with the account: ${deployer.address}`);
 
-	const YieldSyncGovernance = await ethers.getContractFactory(
-		'YieldSyncGovernance'
-	);
-
-	const yieldSyncGovernance = await YieldSyncGovernance.deploy();
+	const yieldSyncGovernance = await (await ethers.getContractFactory('YieldSyncGovernance')).deploy();
 
 	console.log(`Contract address: ${yieldSyncGovernance.address}`);
 }
