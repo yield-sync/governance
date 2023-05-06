@@ -27,12 +27,17 @@ const config: any = {
 			url: `https://mainnet.optimism.io`,
 			accounts: [`0x${process.env.PRIVATE_KEY}`]
 		},
+		sepolia: {
+			url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+			accounts: [`0x${process.env.PRIVATE_KEY}`]
+		},
 	},
 	etherscan: {
 		apiKey: {
-			mainnet: process.env.ETHERSCAN_API_KEY,
 			goerli: process.env.ETHERSCAN_API_KEY,
+			mainnet: process.env.ETHERSCAN_API_KEY,
 			optimisticEthereum: process.env.OPTIMISTIC_ETHERSCAN_API_KEY,
+			sepolia: process.env.ETHERSCAN_API_KEY,
 		}
 	}
 };
