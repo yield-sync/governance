@@ -1,16 +1,42 @@
 require("dotenv").config();
-import { Contract } from "ethers";
-import { ethers } from "hardhat";
+
+import { Contract, ContractFactory } from "ethers";
+import { ethers, run, network } from "hardhat";
 
 
-async function main() {
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+
+async function main()
+{
 	const [deployer] = await ethers.getSigners();
 
-	console.log(`Deploying contracts with the account: ${deployer.address}`);
+	console.log("Deploying on Network:", network.name);
+	console.log("Deployer Account:", deployer.address);
+	console.log("Account Balance:", await deployer.getBalance());
 
-	const yieldSyncGovernance: Contract = await (await ethers.getContractFactory('YieldSyncGovernance')).deploy();
+	// Factory
+	const YieldSyncGovernance: ContractFactory = await ethers.getContractFactory('YieldSyncGovernance');
 
-	console.log(`Contract address: ${yieldSyncGovernance.address}`);
+	// Deploy Contract
+	const yieldSyncGovernance: Contract = await (await YieldSyncGovernance.deploy()).deployed();
+
+	console.log("Waiting 30 seconds before verifying..");
+
+	// Delay
+	await delay(30000);
+
+	// yieldSyncV1ATransferRequestProtocol
+	await run(
+		"verify:verify",
+		{
+			contract: "contracts/YieldSyncGovernance.sol:YieldSyncGovernance",
+			address: yieldSyncGovernance.address,
+			constructorArguments: [],
+		}
+	);
+
+	console.log(`yieldSyncGovernance address: ${yieldSyncGovernance.address}`);
 }
 
 main()
