@@ -41,8 +41,6 @@ async function main()
 
 main()
 	.then(() => {
-		console.log(process.env)
-
 		process.exit(0);
 	})
 	.catch((error) => {
