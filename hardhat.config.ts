@@ -5,11 +5,16 @@ import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-solhint";
 
 
-/**
- * @type import("hardhat/config").HardhatUserConfig
-*/
-const config: any = {
-	solidity: "0.8.18",
+export default {
+	etherscan: {
+		apiKey: {
+			mainnet: process.env.ETHERSCAN_API_KEY,
+			goerli: process.env.ETHERSCAN_API_KEY,
+			optimisticEthereum: process.env.OPTIMISTIC_ETHERSCAN_API_KEY,
+			optimisticGoerli: process.env.OPTIMISTIC_ETHERSCAN_API_KEY,
+			sepolia: process.env.ETHERSCAN_API_KEY,
+		}
+	},
 	networks: {
 		goerli: {
 			url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -25,22 +30,19 @@ const config: any = {
 		},
 		optimism: {
 			url: `https://mainnet.optimism.io`,
-			accounts: [`0x${process.env.PRIVATE_KEY}`]
+			accounts: [`0x${process.env.PRIVATE_KEY}`],
+			gasPrice: 15000000,
+			ovm: true
+		},
+		optimismgoerli: {
+			url: `https://goerli.optimism.io`,
+			accounts: [`0x${process.env.PRIVATE_KEY}`],
+			gasPrice: 15000000
 		},
 		sepolia: {
 			url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
 			accounts: [`0x${process.env.PRIVATE_KEY}`]
 		},
 	},
-	etherscan: {
-		apiKey: {
-			goerli: process.env.ETHERSCAN_API_KEY,
-			mainnet: process.env.ETHERSCAN_API_KEY,
-			optimisticEthereum: process.env.OPTIMISTIC_ETHERSCAN_API_KEY,
-			sepolia: process.env.ETHERSCAN_API_KEY,
-		}
-	}
-};
-
-
-export default config;
+	solidity: "0.8.18",
+} as import("hardhat/config").HardhatUserConfig;

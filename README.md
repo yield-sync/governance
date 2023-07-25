@@ -14,7 +14,7 @@ npx hardhat run scripts/deploy.js
 
 ## `.env` example
 
-```
+```shell
 PRIVATE_KEY=
 INFURA_API_KEY=
 ETHERSCAN_API_KEY=
